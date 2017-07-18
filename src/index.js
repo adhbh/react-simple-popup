@@ -37,11 +37,20 @@ const Popup = (InnerComponent) => class extends React.Component {
 
 		this.options = props.options || {}
 
+		const { show = false } = props
+
 		this.className = this.options.className || 'rs__popup'
 		this.closeOnOutsideClick = !!this.options.closeOnOutsideClick || true
 
 		this.state = {
-			isHidden: false,
+			isHidden: !show,
+		}
+	}
+
+	componentWillReceiveProps(props) {
+		const { show = false } = props
+		this.state = {
+			isHidden: !show,
 		}
 	}
 
@@ -61,12 +70,14 @@ const Popup = (InnerComponent) => class extends React.Component {
 		this.setState({
 			isHidden: true
 		})
+		this.onHide()
 	}
 
 	show () {
 		this.setState({
 			isHidden: false
 		})
+		this.onShow()
 	}
 
 	render () {
@@ -77,7 +88,7 @@ const Popup = (InnerComponent) => class extends React.Component {
 			show: this.show
 		}
 
-		containerStyle.display = this.state.isHidden ? 'none' : 'visible'
+		containerStyle.display = this.state.isHidden ? 'none' : 'block'
 
 		return (
 				<div style={containerStyle} onClick={this.hide}>
@@ -90,7 +101,8 @@ const Popup = (InnerComponent) => class extends React.Component {
 }
 
 Popup.propTypes = {
-	options: PropTypes.object
+	options: PropTypes.object,
+	show: PropTypes.boolean
 }
 
 export default Popup
